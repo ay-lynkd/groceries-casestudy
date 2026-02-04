@@ -1,0 +1,223 @@
+/**
+ * Data Export Utilities
+ * Export business data in various formats
+ */
+
+import * as FileSystem from 'expo-file-system';
+import { Order } from '@/types/order';
+
+export type ExportFormat = 'csv' | 'json' | 'pdf';
+
+interface ExportOptions {
+  format: ExportFormat;
+  dateRange?: { start: Date; end: Date };
+  includeColumns?: string[];
+}
+
+// Product type for export
+interface ExportProduct {
+  id: string;
+  name: string;
+  price: number;
+  stock: number;
+  category: string;
+  description: string;
+}
+
+// Customer type for export
+interface ExportCustomer {
+  id: string;
+  name: string;
+  phone: string;
+  email?: string;
+  totalOrders: number;
+  totalSpent: number;
+  segment: 'new' | 'regular' | 'premium' | 'inactive';
+}
+
+// Get document directory safely
+function getDocumentDirectory(): string {
+  // @ts-ignore - documentDirectory exists at runtime
+  return FileSystem.documentDirectory || '';
+}
+
+// Export orders to CSV
+export async function exportOrdersToCSV(
+  orders: Order[],
+  options?: ExportOptions
+): Promise<string> {
+  const columns = options?.includeColumns || [
+    'id', 'customerName', 'status', 'total', 'createdAt', 'items'
+  ];
+  
+  // Header
+  let csv = columns.join(',') + '\n';
+  
+  // Rows
+  orders.forEach(order => {
+    const row = columns.map(col => {
+      const value = order[col as keyof Order];
+      if (value instanceof Date) {
+        return value.toISOString();
+      }
+      if (typeof value === 'string' && value.includes(',')) {
+        return `"${value}"`;
+      }
+      return String(value);
+    });
+    csv += row.join(',') + '\n';
+  });
+  
+  const filename = `orders_${Date.now()}.csv`;
+  const filepath = `${getDocumentDirectory()}${filename}`;
+  
+  await FileSystem.writeAsStringAsync(filepath, csv);
+  return filepath;
+}
+
+// Export products to CSV
+export async function exportProductsToCSV(
+  products: ExportProduct[]
+): Promise<string> {
+  const csv = [
+    ['Name', 'Price', 'Stock', 'Category', 'Description'].join(','),
+    ...products.map(p => [
+      `"${p.name}"`,
+      p.price,
+      p.stock,
+      `"${p.category}"`,
+      `"${p.description}"`
+    ].join(','))
+  ].join('\n');
+  
+  const filename = `products_${Date.now()}.csv`;
+  const filepath = `${getDocumentDirectory()}${filename}`;
+  
+  await FileSystem.writeAsStringAsync(filepath, csv);
+  return filepath;
+}
+
+// Export customers to CSV
+export async function exportCustomersToCSV(
+  customers: ExportCustomer[]
+): Promise<string> {
+  const csv = [
+    ['Name', 'Phone', 'Email', 'Total Orders', 'Total Spent', 'Segment'].join(','),
+    ...customers.map(c => [
+      `"${c.name}"`,
+      c.phone,
+      c.email || '',
+      c.totalOrders,
+      c.totalSpent,
+      c.segment
+    ].join(','))
+  ].join('\n');
+  
+  const filename = `customers_${Date.now()}.csv`;
+  const filepath = `${getDocumentDirectory()}${filename}`;
+  
+  await FileSystem.writeAsStringAsync(filepath, csv);
+  return filepath;
+}
+
+// Export analytics report
+export async function exportAnalyticsReport(data: {
+  totalRevenue: number;
+  totalOrders: number;
+  averageOrderValue: number;
+  topProducts: { name: string; quantity: number }[];
+  dailySales: { date: string; amount: number }[];
+}): Promise<string> {
+  const report = {
+    generatedAt: new Date().toISOString(),
+    summary: {
+      totalRevenue: data.totalRevenue,
+      totalOrders: data.totalOrders,
+      averageOrderValue: data.averageOrderValue,
+    },
+    topProducts: data.topProducts,
+    dailySales: data.dailySales,
+  };
+  
+  const filename = `analytics_report_${Date.now()}.json`;
+  const filepath = `${getDocumentDirectory()}${filename}`;
+  
+  await FileSystem.writeAsStringAsync(filepath, JSON.stringify(report, null, 2));
+  return filepath;
+}
+
+// Share exported file
+export async function shareExport(filepath: string, mimeType?: string) {
+  // Note: Install expo-sharing to enable sharing functionality
+  // npx expo install expo-sharing
+  console.log('Sharing file:', filepath, 'MIME type:', mimeType);
+  // Placeholder - implement with expo-sharing when installed
+  throw new Error('Sharing not implemented. Install expo-sharing package.');
+}
+
+// Generate PDF report (simplified - in production use expo-print)
+export async function generatePDFReport(
+  title: string,
+  sections: { heading: string; content: string }[]
+): Promise<string> {
+  // Create HTML for PDF
+  const html = `
+    <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          h1 { color: #333; border-bottom: 2px solid #10b981; padding-bottom: 10px; }
+          h2 { color: #666; margin-top: 30px; }
+          p { line-height: 1.6; }
+          .footer { margin-top: 50px; font-size: 12px; color: #999; }
+        </style>
+      </head>
+      <body>
+        <h1>${title}</h1>
+        <p>Generated on: ${new Date().toLocaleString()}</p>
+        ${sections.map(s => `
+          <h2>${s.heading}</h2>
+          <p>${s.content}</p>
+        `).join('')}
+        <div class="footer">Generated by Kirana Store Manager</div>
+      </body>
+    </html>
+  `;
+  
+  const filename = `report_${Date.now()}.html`;
+  const filepath = `${getDocumentDirectory()}${filename}`;
+  
+  await FileSystem.writeAsStringAsync(filepath, html);
+  return filepath;
+}
+
+// Backup all data
+export async function createFullBackup(data: {
+  orders: Order[];
+  products: ExportProduct[];
+  customers: ExportCustomer[];
+}): Promise<string> {
+  const backup = {
+    version: '1.0',
+    createdAt: new Date().toISOString(),
+    data,
+  };
+  
+  const filename = `backup_${Date.now()}.json`;
+  const filepath = `${getDocumentDirectory()}${filename}`;
+  
+  await FileSystem.writeAsStringAsync(filepath, JSON.stringify(backup, null, 2));
+  return filepath;
+}
+
+// Import data from backup
+export async function restoreFromBackup(filepath: string): Promise<{
+  orders: Order[];
+  products: ExportProduct[];
+  customers: ExportCustomer[];
+}> {
+  const content = await FileSystem.readAsStringAsync(filepath);
+  const backup = JSON.parse(content);
+  
+  return backup.data;
+}
