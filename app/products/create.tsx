@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
-import { Text } from '@/components/common';
+import { Text, ScreenHeader } from '@/components/common';
 import { Button, Card } from '@/components/primary';
 import { theme } from '@/theme/appTheme';
 import { Stack, router } from 'expo-router';
@@ -452,14 +452,12 @@ export default function ProductWizardScreen() {
     <>
       <Stack.Screen options={{ title: 'Add Product', headerShown: false }} />
       <View style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color={theme.colors.text.primary} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Add New Product</Text>
-          <View style={{ width: 40 }} />
-        </View>
+        <ScreenHeader 
+          title="Add New Product"
+          showBack={true}
+          onBackPress={handleBack}
+          size="medium"
+        />
 
         {/* Progress */}
         <View style={styles.progressContainer}>

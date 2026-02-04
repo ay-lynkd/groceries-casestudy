@@ -3,9 +3,9 @@
  * View and manage all orders
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity, Alert, RefreshControl, TextInput, ScrollView } from 'react-native';
-import { Text } from '@/components/common';
+import { Text, ScreenHeader, SkeletonOrderItem, EmptyState } from '@/components/common';
 import { Button, Card } from '@/components/primary';
 import { theme } from '@/theme/appTheme';
 import { Stack, router } from 'expo-router';
@@ -35,7 +35,17 @@ export default function OrdersScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<FilterStatus>('all');
   const [refreshing, setRefreshing] = useState(false);
-  const [orders] = useState<Order[]>(ordersData);
+  const [isLoading, setIsLoading] = useState(true);
+  const [orders, setOrders] = useState<Order[]>([]);
+
+  useEffect(() => {
+    // Simulate loading
+    const timer = setTimeout(() => {
+      setOrders(ordersData);
+      setIsLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -82,6 +92,9 @@ export default function OrdersScreen() {
           style={styles.orderContent}
           onPress={() => router.push(`/order/${item.id}` as any)}
           activeOpacity={0.7}
+          accessibilityLabel={`Order ${item.orderId} from ${item.customer.name}`}
+          accessibilityRole="button"
+          accessibilityHint="View order details"
         >
           {/* Order Header */}
           <View style={styles.orderHeader}>
@@ -154,7 +167,12 @@ export default function OrdersScreen() {
             )}
 
             {item.status !== 'new' && (
-              <TouchableOpacity style={styles.viewButton}>
+              <TouchableOpacity 
+                style={styles.viewButton}
+                accessibilityLabel={`View details for order ${item.orderId}`}
+                accessibilityRole="button"
+                accessibilityHint="Open order details"
+              >
                 <Text style={styles.viewButtonText}>View Details</Text>
                 <Ionicons name="chevron-forward" size={theme.typography.fontSize.base} color={theme.colors.status.success} />
               </TouchableOpacity>
@@ -167,20 +185,24 @@ export default function OrdersScreen() {
 
   return (
     <>
-      <Stack.Screen 
-        options={{
-          title: 'Orders',
-          headerRight: () => (
-            <TouchableOpacity 
-              onPress={() => router.push('/analytics/dashboard')}
-              style={styles.headerButton}
-            >
-              <Ionicons name="analytics-outline" size={theme.typography.fontSize.xl} color={theme.colors.status.success} />
-            </TouchableOpacity>
-          ),
-        }} 
+      <Stack.Screen options={{ headerShown: false }} />
+      <ScreenHeader 
+        title="Orders" 
+        showBack={false} 
+        size="medium"
+        rightAction={
+          <TouchableOpacity 
+            onPress={() => router.push('/analytics/dashboard')}
+            style={styles.headerButton}
+            accessibilityLabel="View analytics dashboard"
+            accessibilityRole="button"
+            accessibilityHint="Open analytics and insights"
+          >
+            <Ionicons name="analytics-outline" size={theme.typography.fontSize.xl} color={theme.colors.status.success} />
+          </TouchableOpacity>
+        }
       />
-      <View style={[styles.container, { paddingTop: insets.top }]}>
+      <View style={[styles.container, { paddingTop: 0 }]}>
         {/* Search Bar */}
         <View style={styles.searchContainer}>
           <View style={styles.searchInput}>
@@ -226,6 +248,9 @@ export default function OrdersScreen() {
                   selectedFilter === filter && { backgroundColor: theme.colors.status.success },
                 ]}
                 onPress={() => setSelectedFilter(filter)}
+                accessibilityLabel={`Filter by ${filter === 'all' ? 'All' : filter === 'out_for_delivery' ? 'Out for Delivery' : filter.charAt(0).toUpperCase() + filter.slice(1)}`}
+                accessibilityRole="button"
+                accessibilityHint="Filter orders list"
               >
                 <Text style={[
                   styles.filterText,
@@ -241,28 +266,42 @@ export default function OrdersScreen() {
         </View>
 
         {/* Order List */}
-        <FlatList
-          data={filteredOrders}
-          keyExtractor={item => item.id}
-          renderItem={renderOrder}
-          contentContainerStyle={styles.list}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={handleRefresh}
-              colors={[theme.colors.status.success]}
-              tintColor={theme.colors.status.success}
-            />
-          }
-          ListEmptyComponent={
-            <View style={styles.emptyContainer}>
-              <Ionicons name="receipt-outline" size={theme.spacing.xxl} color={theme.colors.text.light} />
-              <Text style={styles.emptyTitle}>No orders found</Text>
-              <Text style={styles.emptySubtitle}>Try adjusting your search or filters</Text>
-            </View>
-          }
-        />
+        {isLoading ? (
+          <View style={styles.list}>
+            <SkeletonOrderItem />
+            <SkeletonOrderItem />
+            <SkeletonOrderItem />
+            <SkeletonOrderItem />
+            <SkeletonOrderItem />
+          </View>
+        ) : (
+          <FlatList
+            data={filteredOrders}
+            keyExtractor={item => item.id}
+            renderItem={renderOrder}
+            contentContainerStyle={styles.list}
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+                colors={[theme.colors.status.success]}
+                tintColor={theme.colors.status.success}
+              />
+            }
+            ListEmptyComponent={
+              <EmptyState
+                variant="orders"
+                title="No Orders Found"
+                description={
+                  orders.length === 0
+                    ? "Your orders will appear here when customers place them"
+                    : "Try adjusting your search or filters"
+                }
+              />
+            }
+          />
+        )}
       </View>
     </>
   );
@@ -398,20 +437,5 @@ const styles = StyleSheet.create({
     fontWeight: theme.typography.fontWeight.semibold,
     color: theme.colors.status.success,
   },
-  emptyContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: theme.spacing.xxl,
-  },
-  emptyTitle: {
-    fontSize: theme.typography.fontSize.lg,
-    fontWeight: theme.typography.fontWeight.semibold,
-    color: theme.colors.text.primary,
-    marginTop: theme.spacing.md,
-  },
-  emptySubtitle: {
-    fontSize: theme.typography.fontSize.sm,
-    color: theme.colors.text.secondary,
-    marginTop: theme.spacing.xs,
-  },
+
 });

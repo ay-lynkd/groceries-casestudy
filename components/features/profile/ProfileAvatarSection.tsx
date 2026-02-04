@@ -26,6 +26,9 @@ export const ProfileAvatarSection: React.FC<ProfileAvatarSectionProps> = ({
           style={styles.cameraButton}
           onPress={onEditPhoto}
           activeOpacity={0.8}
+          accessibilityLabel="Edit profile photo"
+          accessibilityRole="button"
+          accessibilityHint="Change your profile picture"
         >
           <Ionicons name="camera" size={16} color="white" />
         </TouchableOpacity>

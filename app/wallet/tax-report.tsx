@@ -182,12 +182,12 @@ export default function TaxReportScreen() {
 
           <View style={styles.statsGrid}>
             <Card style={styles.statCard}>
-              <Ionicons name="cash-outline" size={24} color="#4CAF50" />
+              <Ionicons name="cash-outline" size={24} color={theme.colors.status.success} />
               <Text style={styles.statValue}>{formatCurrency(taxData.totalRevenue)}</Text>
               <Text style={styles.statLabel}>Total Revenue</Text>
             </Card>
             <Card style={styles.statCard}>
-              <Ionicons name="receipt-outline" size={24} color="#2196F3" />
+              <Ionicons name="receipt-outline" size={24} color={theme.colors.status.info} />
               <Text style={styles.statValue}>{taxData.ordersCount}</Text>
               <Text style={styles.statLabel}>Orders</Text>
             </Card>
@@ -202,7 +202,7 @@ export default function TaxReportScreen() {
             <Ionicons 
               name={showGSTDetails ? 'chevron-up' : 'chevron-down'} 
               size={20} 
-              color="#666" 
+              color={theme.colors.text.secondary} 
             />
           </TouchableOpacity>
 
@@ -293,8 +293,8 @@ Generated on: ${new Date().toLocaleDateString()}
               }
             }}
           >
-            <Ionicons name="share-outline" size={18} color="#FFF" />
-            <Text style={{ marginLeft: 8, color: '#FFF' }}>Share with CA</Text>
+            <Ionicons name="share-outline" size={18} color={theme.colors.background.primary} />
+            <Text style={{ marginLeft: 8, color: theme.colors.background.primary }}>Share with CA</Text>
           </Button>
         </View>
 
@@ -310,7 +310,7 @@ Generated on: ${new Date().toLocaleDateString()}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.colors.background.secondary,
   },
   periodSection: {
     padding: 16,
@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
   },
   periodTabs: {
     flexDirection: 'row',
-    backgroundColor: '#E0E0E0',
+    backgroundColor: theme.colors.border.light,
     borderRadius: 8,
     padding: 4,
   },
@@ -333,14 +333,14 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   periodTabActive: {
-    backgroundColor: '#FFF',
+    backgroundColor: theme.colors.background.primary,
   },
   periodTabText: {
     fontSize: 14,
-    color: '#666',
+    color: theme.colors.text.secondary,
   },
   periodTabTextActive: {
-    color: '#4CAF50',
+    color: theme.colors.status.success,
     fontWeight: '600',
   },
   selectionCard: {
@@ -366,13 +366,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: theme.colors.background.tertiary,
   },
   pickerChipActive: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: theme.colors.status.success,
   },
   pickerChipTextActive: {
-    color: '#FFF',
+    color: theme.colors.background.primary,
     fontWeight: '600',
   },
   quarterGrid: {
@@ -385,14 +385,14 @@ const styles = StyleSheet.create({
     width: '22%',
     paddingVertical: 10,
     borderRadius: 8,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: theme.colors.background.tertiary,
     alignItems: 'center',
   },
   quarterChipActive: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: theme.colors.status.success,
   },
   quarterChipTextActive: {
-    color: '#FFF',
+    color: theme.colors.background.primary,
     fontWeight: '600',
   },
   summarySection: {
@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
   totalTaxCard: {
     padding: 24,
     alignItems: 'center',
-    backgroundColor: '#4CAF50',
+    backgroundColor: theme.colors.status.success,
   },
   totalTaxLabel: {
     fontSize: 14,
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
   totalTaxAmount: {
     fontSize: 36,
     fontWeight: 'bold',
-    color: '#FFF',
+    color: theme.colors.background.primary,
     marginVertical: 8,
   },
   taxRateBadge: {
@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   taxRateText: {
-    color: '#FFF',
+    color: theme.colors.background.primary,
     fontSize: 12,
     fontWeight: '600',
   },
@@ -442,7 +442,7 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     fontSize: 12,
-    color: '#666',
+    color: theme.colors.text.secondary,
   },
   gstHeader: {
     flexDirection: 'row',
@@ -467,17 +467,17 @@ const styles = StyleSheet.create({
   },
   gstDivider: {
     width: 1,
-    backgroundColor: '#E0E0E0',
+    backgroundColor: theme.colors.border.light,
   },
   gstLabel: {
     fontSize: 12,
-    color: '#666',
+    color: theme.colors.text.secondary,
     marginBottom: 4,
   },
   gstValue: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: theme.colors.text.primary,
   },
   monthlySection: {
     padding: 16,
@@ -500,7 +500,7 @@ const styles = StyleSheet.create({
   monthAmount: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#4CAF50',
+    color: theme.colors.status.success,
   },
   monthDetails: {
     flexDirection: 'row',
@@ -508,11 +508,11 @@ const styles = StyleSheet.create({
   },
   monthTax: {
     fontSize: 13,
-    color: '#666',
+    color: theme.colors.text.secondary,
   },
   monthOrders: {
     fontSize: 13,
-    color: '#666',
+    color: theme.colors.text.secondary,
   },
   actions: {
     flexDirection: 'row',
@@ -521,7 +521,7 @@ const styles = StyleSheet.create({
   },
   disclaimer: {
     fontSize: 12,
-    color: '#999',
+    color: theme.colors.text.light,
     textAlign: 'center',
     padding: 16,
     paddingTop: 0,

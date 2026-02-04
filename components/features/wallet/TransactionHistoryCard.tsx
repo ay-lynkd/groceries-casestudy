@@ -25,7 +25,12 @@ export const TransactionHistoryCard: React.FC<TransactionHistoryCardProps> = ({
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Transaction History</Text>
-        <TouchableOpacity onPress={onShowAll}>
+        <TouchableOpacity 
+          onPress={onShowAll}
+          accessibilityLabel="Show all transactions"
+          accessibilityRole="button"
+          accessibilityHint="View complete transaction history"
+        >
           <Text style={styles.showAll}>Show all</Text>
         </TouchableOpacity>
       </View>

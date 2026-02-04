@@ -1,51 +1,12 @@
 /**
  * App theme - numeric values for React Native StyleSheet
+ * Supports both light and dark themes
  */
-export const theme = {
-  colors: {
-    primary: {
-      green: "#4CAF50",
-      purple: "#9C27B0",
-      darkPurple: "#7B1FA2",
-      orange: "#FF9800",
-    },
-    status: {
-      success: "#4CAF50",
-      error: "#F44336",
-      warning: "#FFC107",
-      info: "#2196F3",
-    },
-    background: {
-      primary: "#FFFFFF",
-      secondary: "#F8F8F8",
-      tertiary: "#F0F0F0",
-      card: "#FFFFFF",
-    },
-    text: {
-      primary: "#212121",
-      secondary: "#757575",
-      light: "#9E9E9E",
-    },
-    border: {
-      light: "#E0E0E0",
-      medium: "#BDBDBD",
-    },
-    badge: {
-      delivered: "#E3F2FD",
-      pending: "#FFF9C4",
-      cancelled: "#FFEBEE",
-    },
-    wallet: {
-      darkBg: "#0D0D1A",
-      darkBgMid: "#0F1028",
-      darkBgEnd: "#0A0A14",
-      glassBg: "rgba(255,255,255,0.08)",
-      glassBorder: "rgba(255,255,255,0.15)",
-      accent: "#00D09C",
-      cardBg: "#2D5A4A",
-      smartpayBg: "#1E3A5F",
-    },
-  },
+
+import { ThemeColors, useTheme, lightColors, darkColors } from '@/contexts/ThemeContext';
+
+// Base theme structure with shared values
+const baseTheme = {
   spacing: {
     xs: 4,
     sm: 8,
@@ -87,6 +48,43 @@ export const theme = {
     poppins: "Poppins",
     plusJakarta: "PlusJakartaSans",
   },
+};
+
+// Light theme with colors
+export const lightTheme = {
+  ...baseTheme,
+  colors: lightColors,
 } as const;
 
-export type Theme = typeof theme;
+// Dark theme with colors
+export const darkTheme = {
+  ...baseTheme,
+  colors: darkColors,
+} as const;
+
+// Original theme export for backward compatibility (defaults to light)
+export const theme = lightTheme;
+
+// Type for the light theme
+export type Theme = typeof lightTheme;
+
+// Type for the dark theme
+export type DarkTheme = typeof darkTheme;
+
+// Hook to get the current theme based on context
+export function useAppTheme() {
+  const { colors, isDark } = useTheme();
+  
+  return {
+    ...baseTheme,
+    colors,
+    isDark,
+  };
+}
+
+// Helper function to get theme colors outside of components
+export function getThemeColors(isDarkMode: boolean): ThemeColors {
+  return isDarkMode ? darkColors : lightColors;
+}
+
+export default theme;

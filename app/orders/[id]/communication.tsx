@@ -1,6 +1,7 @@
 import { Loading, Text } from "@/components/common";
 import { Button, Card } from "@/components/primary";
 import { theme } from "@/theme/appTheme";
+
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
@@ -264,7 +265,7 @@ const CustomerCommunicationScreen: React.FC = () => {
           </Text>
           {unreadMessages > 0 && (
             <View style={styles.unreadBadge}>
-              <Text variant="caption" fontWeight="bold" color="#FFFFFF">
+              <Text variant="caption" fontWeight="bold" color={theme.colors.background.primary}>
                 {unreadMessages}
               </Text>
             </View>
@@ -434,9 +435,9 @@ const CustomerCommunicationScreen: React.FC = () => {
             accessibilityLabel="Send message"
           >
             {sending ? (
-              <Loading size="small" color="#FFFFFF" />
+              <Loading size="small" color={theme.colors.background.primary} />
             ) : (
-              <Ionicons name="send" size={20} color="#FFFFFF" />
+              <Ionicons name="send" size={20} color={theme.colors.background.primary} />
             )}
           </Button>
         </View>
@@ -562,7 +563,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.xs,
   },
   ownMessageText: {
-    color: "#FFFFFF",
+    color: theme.colors.background.primary,
   },
   messageMeta: {
     flexDirection: "row",

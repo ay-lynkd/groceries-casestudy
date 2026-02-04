@@ -27,13 +27,24 @@ export const SubCategoryTabs: React.FC<SubCategoryTabsProps> = ({
             onPress={() => onTabChange(tab)}
             style={[styles.tab, selectedTab === tab && styles.tabActive]}
             activeOpacity={0.8}
+            accessibilityLabel={`Filter by ${tab}`}
+            accessibilityRole="button"
+            accessibilityHint={`Show ${tab} products`}
+            accessibilityState={{ selected: selectedTab === tab }}
           >
             <Text style={[styles.tabText, selectedTab === tab && styles.tabTextActive]}>{tab}</Text>
           </TouchableOpacity>
         ))}
       </View>
       {showAddButton && (
-        <TouchableOpacity style={styles.addButton} onPress={onAddClick} activeOpacity={0.8}>
+        <TouchableOpacity 
+          style={styles.addButton} 
+          onPress={onAddClick} 
+          activeOpacity={0.8}
+          accessibilityLabel="Add new product"
+          accessibilityRole="button"
+          accessibilityHint="Opens product creation form"
+        >
           <Ionicons name="add" size={16} color={theme.colors.primary.green} />
           <Text style={styles.addText}>Add Product</Text>
         </TouchableOpacity>

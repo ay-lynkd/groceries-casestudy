@@ -3,9 +3,9 @@
  * List and manage all products
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity, Image, Alert, RefreshControl } from 'react-native';
-import { Text } from '@/components/common';
+import { Text, ScreenHeader, SkeletonProductItem, SkeletonCard, EmptyState } from '@/components/common';
 import { Button, Card } from '@/components/primary';
 import { theme } from '@/theme/appTheme';
 import { Stack, router } from 'expo-router';
@@ -31,7 +31,17 @@ export default function ProductsScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'inStock' | 'outOfStock' | 'onSale'>('all');
   const [refreshing, setRefreshing] = useState(false);
-  const [products, setProducts] = useState<Product[]>(productsData as any);
+  const [isLoading, setIsLoading] = useState(true);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    // Simulate loading
+    const timer = setTimeout(() => {
+      setProducts(productsData as any);
+      setIsLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -75,6 +85,9 @@ export default function ProductsScreen() {
         style={styles.productContent}
         onPress={() => router.push(`/product/${item.id}`)}
         activeOpacity={0.7}
+        accessibilityLabel={`${item.name} product card`}
+        accessibilityRole="button"
+        accessibilityHint="View product details"
       >
         <Image source={{ uri: item.image }} style={styles.productImage} />
         <View style={styles.productInfo}>
@@ -115,12 +128,18 @@ export default function ProductsScreen() {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               router.push(`/product/${item.id}/edit`);
             }}
+            accessibilityLabel={`Edit ${item.name}`}
+            accessibilityRole="button"
+            accessibilityHint="Edit product details"
           >
             <Ionicons name="create-outline" size={theme.typography.fontSize.lg} color={theme.colors.status.info} />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.actionButton}
             onPress={() => handleDeleteProduct(item.id)}
+            accessibilityLabel={`Delete ${item.name}`}
+            accessibilityRole="button"
+            accessibilityHint="Delete this product"
           >
             <Ionicons name="trash-outline" size={theme.typography.fontSize.lg} color={theme.colors.status.error} />
           </TouchableOpacity>
@@ -141,6 +160,9 @@ export default function ProductsScreen() {
                 router.push('/product/create/wizard');
               }} 
               style={styles.headerButton}
+              accessibilityLabel="Add new product"
+              accessibilityRole="button"
+              accessibilityHint="Create a new product"
             >
               <Ionicons name="add" size={theme.typography.fontSize['2xl'] + 4} color={theme.colors.status.success} />
             </TouchableOpacity>
@@ -148,6 +170,12 @@ export default function ProductsScreen() {
         }} 
       />
       <View style={[styles.container, { paddingTop: insets.top }]}>
+        <ScreenHeader 
+          title="Products"
+          showBack={false}
+          size="medium"
+        />
+
         {/* Search Bar */}
         <View style={styles.searchContainer}>
           <View style={styles.searchInput}>
@@ -172,6 +200,9 @@ export default function ProductsScreen() {
                 selectedFilter === filter && { backgroundColor: theme.colors.status.success },
               ]}
               onPress={() => setSelectedFilter(filter)}
+              accessibilityLabel={`Filter by ${filter === 'all' ? 'All' : filter === 'inStock' ? 'In Stock' : filter === 'outOfStock' ? 'Out of Stock' : 'On Sale'}`}
+              accessibilityRole="button"
+              accessibilityHint="Filter products list"
             >
               <Text style={[
                 styles.filterText,
@@ -203,28 +234,45 @@ export default function ProductsScreen() {
         </View>
 
         {/* Product List */}
-        <FlatList
-          data={filteredProducts}
-          keyExtractor={item => item.id}
-          renderItem={renderProduct}
-          contentContainerStyle={styles.list}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={handleRefresh}
-              colors={[theme.colors.status.success]}
-              tintColor={theme.colors.status.success}
-            />
-          }
-          ListEmptyComponent={
-            <View style={styles.emptyContainer}>
-              <Ionicons name="cube-outline" size={theme.spacing.xxl} color={theme.colors.text.light} />
-              <Text style={styles.emptyTitle}>No products found</Text>
-              <Text style={styles.emptySubtitle}>Try adjusting your search or filters</Text>
-            </View>
-          }
-        />
+        {isLoading ? (
+          <View style={styles.list}>
+            <SkeletonCard />
+            <SkeletonProductItem />
+            <SkeletonProductItem />
+            <SkeletonProductItem />
+            <SkeletonProductItem />
+            <SkeletonProductItem />
+          </View>
+        ) : (
+          <FlatList
+            data={filteredProducts}
+            keyExtractor={item => item.id}
+            renderItem={renderProduct}
+            contentContainerStyle={styles.list}
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+                colors={[theme.colors.status.success]}
+                tintColor={theme.colors.status.success}
+              />
+            }
+            ListEmptyComponent={
+              <EmptyState
+                variant="products"
+                title="No Products Found"
+                description={
+                  products.length === 0
+                    ? "Add your first product to start selling"
+                    : "Try adjusting your search or filters"
+                }
+                actionLabel={products.length === 0 ? "Add Product" : undefined}
+                onAction={products.length === 0 ? () => router.push('/product/create/wizard') : undefined}
+              />
+            }
+          />
+        )}
 
         {/* Bulk Actions */}
         <View style={styles.footer}>
@@ -377,22 +425,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background.secondary,
     borderRadius: theme.borderRadius.sm,
   },
-  emptyContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: theme.spacing.xxl,
-  },
-  emptyTitle: {
-    fontSize: theme.typography.fontSize.lg,
-    fontWeight: theme.typography.fontWeight.semibold,
-    color: theme.colors.text.primary,
-    marginTop: theme.spacing.md,
-  },
-  emptySubtitle: {
-    fontSize: theme.typography.fontSize.sm,
-    color: theme.colors.text.secondary,
-    marginTop: theme.spacing.xs,
-  },
+
   footer: {
     flexDirection: 'row',
     gap: theme.spacing.md,

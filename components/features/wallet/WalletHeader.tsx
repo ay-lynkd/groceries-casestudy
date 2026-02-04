@@ -76,6 +76,9 @@ export const WalletHeader: React.FC<WalletHeaderProps> = ({
             style={styles.iconButton}
             onPress={onSearchPress}
             activeOpacity={0.7}
+            accessibilityLabel="Search transactions"
+            accessibilityRole="button"
+            accessibilityHint="Search your transaction history"
           >
             <Ionicons name="search" size={22} color="white" />
           </TouchableOpacity>
@@ -83,6 +86,9 @@ export const WalletHeader: React.FC<WalletHeaderProps> = ({
             style={styles.iconButton}
             onPress={onNotificationPress}
             activeOpacity={0.7}
+            accessibilityLabel={`Notifications${notificationCount > 0 ? `, ${notificationCount} unread` : ''}`}
+            accessibilityRole="button"
+            accessibilityHint="View your notifications"
           >
             <Ionicons name="notifications-outline" size={22} color="white" />
             {notificationCount > 0 && (

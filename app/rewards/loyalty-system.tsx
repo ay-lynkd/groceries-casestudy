@@ -1,4 +1,4 @@
-import { Text } from "@/components/common";
+import { ScreenHeader, Text } from "@/components/common";
 import { Button, Card } from "@/components/primary";
 import { theme } from "@/theme/appTheme";
 
@@ -414,18 +414,15 @@ const LoyaltyRewardsSystem: React.FC = () => {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="chevron-back" size={24} color={colors.text.primary} />
-        </TouchableOpacity>
-        <Text variant="h2" fontWeight="bold" style={styles.headerTitle}>
-          Loyalty Rewards
-        </Text>
-        <TouchableOpacity onPress={handleCreateReward} style={styles.addButton}>
-          <Ionicons name="add" size={24} color={colors.text.primary} />
-        </TouchableOpacity>
-      </View>
+      <ScreenHeader
+        title="Loyalty Rewards"
+        showBack={true}
+        rightElement={
+          <TouchableOpacity onPress={handleCreateReward} style={styles.addButton}>
+            <Ionicons name="add" size={24} color={colors.text.primary} />
+          </TouchableOpacity>
+        }
+      />
 
       {/* Main Content - Using FlatList as primary scrollable */}
       <FlatList
@@ -606,22 +603,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background.primary,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border.light,
-  },
-  backButton: {
-    padding: spacing.sm,
-  },
-  headerTitle: {
-    flex: 1,
-    textAlign: "center",
   },
   addButton: {
     padding: spacing.sm,

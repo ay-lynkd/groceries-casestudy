@@ -245,6 +245,10 @@ export const OrderCard = React.memo(({ order, showItems = true }: OrderCardProps
                   <TouchableOpacity 
                     style={[styles.checkbox, item.isPacked && styles.checkboxChecked]}
                     onPress={() => handleTogglePacked(item.id, item.isPacked)}
+                    accessibilityLabel={`${item.isPacked ? 'Unmark' : 'Mark'} ${item.name} as packed`}
+                    accessibilityRole="checkbox"
+                    accessibilityState={{ checked: item.isPacked }}
+                    accessibilityHint="Toggle packed status for this item"
                   >
                     {item.isPacked && <Ionicons name="checkmark" size={14} color="#FFF" />}
                   </TouchableOpacity>

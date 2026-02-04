@@ -1,3 +1,4 @@
+import { ScreenHeader } from '@/components/common';
 import { Button, Card } from '@/components/primary';
 import { ROUTES } from '@/constants';
 import { PRODUCT_CATEGORIES, PRODUCT_SUBCATEGORIES, TAX_CLASSES } from '@/constants/productCategories';
@@ -177,13 +178,7 @@ export default function EditProductScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={handleBack} style={styles.headerBtn}>
-          <Ionicons name="chevron-back" size={24} color={theme.colors.text.primary} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Edit Product</Text>
-        <View style={styles.headerBtn} />
-      </View>
+      <ScreenHeader title="Edit Product" showBack={true} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Card style={styles.card}>
           <Text style={styles.sectionTitle}>Basic Information</Text>
@@ -445,17 +440,6 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: theme.colors.background.secondary },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.colors.background.secondary },
   errorText: { color: theme.colors.text.primary, fontSize: 16 },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    paddingTop: 48,
-    backgroundColor: theme.colors.background.primary,
-  },
-  headerBtn: { padding: 8, minWidth: 40 },
-  headerTitle: { color: theme.colors.text.primary, fontSize: 18, fontWeight: '600' },
   content: { padding: 16, paddingBottom: 32 },
   searchWrap: { marginBottom: 16 },
   card: { marginBottom: 16 },

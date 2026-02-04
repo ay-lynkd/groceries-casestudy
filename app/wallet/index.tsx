@@ -3,12 +3,13 @@
  * View wallet balance and transaction history
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity, RefreshControl, ScrollView, Image } from 'react-native';
-import { Text } from '@/components/common';
+import { Text, SkeletonStats, SkeletonCard, EmptyState } from '@/components/common';
+import { ScreenHeader } from '@/components/common/ScreenHeader';
 import { Button, Card } from '@/components/primary';
 import { theme } from '@/theme/appTheme';
-import { Stack, router } from 'expo-router';
+import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -24,7 +25,17 @@ export default function WalletScreen() {
   const { availableBalance } = useWallet();
   const [selectedPeriod, setSelectedPeriod] = useState<typeof PERIOD_FILTERS[number]>('Week');
   const [refreshing, setRefreshing] = useState(false);
-  const [transactions] = useState<Transaction[]>(walletData.transactions);
+  const [isLoading, setIsLoading] = useState(true);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  useEffect(() => {
+    // Simulate loading
+    const timer = setTimeout(() => {
+      setTransactions(walletData.transactions);
+      setIsLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -73,18 +84,21 @@ export default function WalletScreen() {
 
   return (
     <>
-      <Stack.Screen 
-        options={{
-          title: 'Wallet',
-          headerRight: () => (
-            <TouchableOpacity 
-              onPress={() => router.push('/wallet/tax-report')}
-              style={styles.headerButton}
-            >
-              <Ionicons name="document-text-outline" size={theme.typography.fontSize.xl} color={theme.colors.status.success} />
-            </TouchableOpacity>
-          ),
-        }} 
+      <ScreenHeader 
+        title="Wallet" 
+        showBack={false} 
+        size="medium" 
+        rightAction={(
+          <TouchableOpacity 
+            onPress={() => router.push('/wallet/tax-report')}
+            style={styles.headerButton}
+            accessibilityLabel="View tax report"
+            accessibilityRole="button"
+            accessibilityHint="Open tax report page"
+          >
+            <Ionicons name="document-text-outline" size={theme.typography.fontSize.xl} color={theme.colors.status.success} />
+          </TouchableOpacity>
+        )} 
       />
       <ScrollView 
         style={[styles.container, { paddingTop: insets.top }]}
@@ -100,28 +114,37 @@ export default function WalletScreen() {
       >
         {/* Balance Card */}
         <View style={styles.balanceSection}>
-          <Card style={styles.balanceCard}>
-            <View style={styles.balanceHeader}>
-              <Text style={styles.balanceLabel}>Total Balance</Text>
-              <TouchableOpacity style={styles.eyeButton}>
-                <Ionicons name="eye-outline" size={theme.typography.fontSize.lg} color={theme.colors.background.primary} />
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.balanceAmount} numberOfLines={1} adjustsFontSizeToFit>
-              {formatCurrency(availableBalance)}
-            </Text>
-            <View style={styles.balanceRow}>
-              <View style={styles.balanceItem}>
-                <Text style={styles.balanceItemLabel}>This Week</Text>
-                <Text style={styles.balanceItemValue}>+{formatCurrency(1250)}</Text>
+          {isLoading ? (
+            <SkeletonCard />
+          ) : (
+            <Card style={styles.balanceCard}>
+              <View style={styles.balanceHeader}>
+                <Text style={styles.balanceLabel}>Total Balance</Text>
+                <TouchableOpacity 
+                  style={styles.eyeButton}
+                  accessibilityLabel="Toggle balance visibility"
+                  accessibilityRole="button"
+                  accessibilityHint="Show or hide wallet balance"
+                >
+                  <Ionicons name="eye-outline" size={theme.typography.fontSize.lg} color={theme.colors.background.primary} />
+                </TouchableOpacity>
               </View>
-              <View style={styles.balanceDivider} />
-              <View style={styles.balanceItem}>
-                <Text style={styles.balanceItemLabel}>This Month</Text>
-                <Text style={styles.balanceItemValue}>+{formatCurrency(5215)}</Text>
+              <Text style={styles.balanceAmount} numberOfLines={1} adjustsFontSizeToFit>
+                {formatCurrency(availableBalance)}
+              </Text>
+              <View style={styles.balanceRow}>
+                <View style={styles.balanceItem}>
+                  <Text style={styles.balanceItemLabel}>This Week</Text>
+                  <Text style={styles.balanceItemValue}>+{formatCurrency(1250)}</Text>
+                </View>
+                <View style={styles.balanceDivider} />
+                <View style={styles.balanceItem}>
+                  <Text style={styles.balanceItemLabel}>This Month</Text>
+                  <Text style={styles.balanceItemValue}>+{formatCurrency(5215)}</Text>
+                </View>
               </View>
-            </View>
-          </Card>
+            </Card>
+          )}
         </View>
 
         {/* Quick Actions */}
@@ -132,6 +155,9 @@ export default function WalletScreen() {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               router.push('/wallet/payout-request');
             }}
+            accessibilityLabel="Withdraw funds"
+            accessibilityRole="button"
+            accessibilityHint="Request a payout to your bank account"
           >
             <View style={[styles.actionIcon, { backgroundColor: theme.colors.status.success + '15' }]}>
               <Ionicons name="arrow-down-outline" size={theme.typography.fontSize.xl} color={theme.colors.status.success} />
@@ -145,6 +171,9 @@ export default function WalletScreen() {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               router.push('/analytics/sales');
             }}
+            accessibilityLabel="View analytics"
+            accessibilityRole="button"
+            accessibilityHint="Open sales analytics dashboard"
           >
             <View style={[styles.actionIcon, { backgroundColor: theme.colors.status.info + '15' }]}>
               <Ionicons name="analytics-outline" size={theme.typography.fontSize.xl} color={theme.colors.status.info} />
@@ -158,6 +187,9 @@ export default function WalletScreen() {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               router.push('/wallet/tax-report');
             }}
+            accessibilityLabel="View tax report"
+            accessibilityRole="button"
+            accessibilityHint="Open tax report and financial summary"
           >
             <View style={[styles.actionIcon, { backgroundColor: theme.colors.primary.orange + '15' }]}>
               <Ionicons name="receipt-outline" size={theme.typography.fontSize.xl} color={theme.colors.primary.orange} />
@@ -171,6 +203,9 @@ export default function WalletScreen() {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               // Bank accounts functionality
             }}
+            accessibilityLabel="Manage bank accounts"
+            accessibilityRole="button"
+            accessibilityHint="View and manage connected bank accounts"
           >
             <View style={[styles.actionIcon, { backgroundColor: theme.colors.primary.purple + '15' }]}>
               <Ionicons name="card-outline" size={theme.typography.fontSize.xl} color={theme.colors.primary.purple} />
@@ -193,6 +228,9 @@ export default function WalletScreen() {
                   setSelectedPeriod(period);
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 }}
+                accessibilityLabel={`Filter by ${period}`}
+                accessibilityRole="button"
+                accessibilityHint="Change time period for earnings view"
               >
                 <Text style={[
                   styles.periodText,
@@ -232,18 +270,40 @@ export default function WalletScreen() {
         <View style={styles.transactionsSection}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Recent Transactions</Text>
-            <TouchableOpacity>
-              <Text style={styles.viewAllText}>View All</Text>
-            </TouchableOpacity>
+            {!isLoading && (
+              <TouchableOpacity
+                accessibilityLabel="View all transactions"
+                accessibilityRole="button"
+                accessibilityHint="See complete transaction history"
+              >
+                <Text style={styles.viewAllText}>View All</Text>
+              </TouchableOpacity>
+            )}
           </View>
 
-          <FlatList
-            data={transactions.slice(0, 5)}
-            keyExtractor={item => item.id}
-            renderItem={renderTransaction}
-            scrollEnabled={false}
-            contentContainerStyle={styles.transactionsList}
-          />
+          {isLoading ? (
+            <View style={styles.transactionsList}>
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+            </View>
+          ) : transactions.length === 0 ? (
+            <EmptyState
+              variant="wallet"
+              title="No Transactions Yet"
+              description="Your transaction history will appear here once you start receiving payments"
+            />
+          ) : (
+            <FlatList
+              data={transactions.slice(0, 5)}
+              keyExtractor={item => item.id}
+              renderItem={renderTransaction}
+              scrollEnabled={false}
+              contentContainerStyle={styles.transactionsList}
+            />
+          )}
         </View>
 
         {/* Payout CTA */}

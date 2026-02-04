@@ -1,3 +1,4 @@
+import { ScreenHeader } from "@/components/common";
 import { Button, Card } from "@/components/primary";
 import { ROUTES } from "@/constants";
 import { productsData } from "@/mocks/storeProductsData";
@@ -99,19 +100,15 @@ export default function ProductDetailsScreen() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={handleBack} style={styles.headerBtn}>
-          <Ionicons
-            name="chevron-back"
-            size={24}
-            color={theme.colors.text.primary}
-          />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Product Details</Text>
-        <TouchableOpacity onPress={handleEdit} style={styles.headerBtn}>
-          <Ionicons name="pencil" size={24} color={theme.colors.text.primary} />
-        </TouchableOpacity>
-      </View>
+      <ScreenHeader
+        title="Product Details"
+        showBack={true}
+        rightElement={
+          <TouchableOpacity onPress={handleEdit} style={styles.headerBtn}>
+            <Ionicons name="pencil" size={24} color={theme.colors.text.primary} />
+          </TouchableOpacity>
+        }
+      />
       <ScrollView
         contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + theme.spacing.lg }]}
         showsVerticalScrollIndicator={false}
@@ -206,21 +203,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background.secondary,
   },
   errorText: { color: theme.colors.text.primary, fontSize: 16 },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    paddingTop: 48,
-    backgroundColor: theme.colors.background.primary,
-  },
   headerBtn: { padding: 8 },
-  headerTitle: {
-    color: theme.colors.text.primary,
-    fontSize: 18,
-    fontWeight: "600",
-  },
   content: { padding: 16, paddingBottom: 100 },
   imagePlaceholder: {
     height: 240,

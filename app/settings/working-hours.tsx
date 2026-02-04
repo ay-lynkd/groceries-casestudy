@@ -1,4 +1,4 @@
-import { Text } from "@/components/common";
+import { ScreenHeader, Text } from "@/components/common";
 import { Button, Card } from "@/components/primary";
 import { theme } from "@/theme/appTheme";
 import { Ionicons } from "@expo/vector-icons";
@@ -269,24 +269,7 @@ const WorkingHoursManagement: React.FC = () => {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="chevron-back" size={24} color={theme.colors.text.primary} />
-        </TouchableOpacity>
-        <Text variant="h2" fontWeight="bold" style={styles.headerTitle}>
-          Working Hours
-        </Text>
-        <View style={styles.headerActions}>
-          <TouchableOpacity
-            onPress={handleReset}
-            style={styles.resetButton}
-            accessibilityLabel="Reset to default"
-          >
-            <Ionicons name="refresh" size={24} color={theme.colors.text.primary} />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <ScreenHeader title="Working Hours" showBack={true} size="medium" />
 
       <ScrollView
         style={styles.content}
@@ -386,29 +369,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background.primary,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border.light,
-  },
-  backButton: {
-    padding: theme.spacing.sm,
-  },
-  headerTitle: {
-    flex: 1,
-    textAlign: "center",
-  },
-  headerActions: {
-    flexDirection: "row",
-    gap: theme.spacing.md,
-  },
-  resetButton: {
-    padding: theme.spacing.sm,
   },
   content: {
     flex: 1,

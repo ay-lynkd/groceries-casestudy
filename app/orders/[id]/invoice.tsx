@@ -258,7 +258,7 @@ export default function InvoiceScreen() {
         <View style={styles.actions}>
           <Button variant="primary" onPress={handlePrint}>
             <Ionicons name="print-outline" size={20} color={theme.colors.background.primary} />
-            <Text style={{ color: '#FFF', marginLeft: 8 }}>Print Invoice</Text>
+            <Text style={{ color: colors.background.primary, marginLeft: 8 }}>Print Invoice</Text>
           </Button>
         </View>
 
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
     gap: theme.spacing.sm,
   },
   metaText: {
-    color: '#666',
+    color: theme.colors.text.secondary,
     fontSize: theme.typography.fontSize.sm,
   },
   sectionCard: {
@@ -333,12 +333,12 @@ const styles = StyleSheet.create({
   },
   customerPhone: {
     fontSize: 14,
-    color: '#666',
+    color: theme.colors.text.secondary,
     marginBottom: 4,
   },
   customerAddress: {
     fontSize: 14,
-    color: '#666',
+    color: theme.colors.text.secondary,
   },
   itemRow: {
     flexDirection: 'row',
@@ -356,7 +356,7 @@ const styles = StyleSheet.create({
   },
   itemQty: {
     fontSize: theme.typography.fontSize.xs + 1,
-    color: '#666',
+    color: theme.colors.text.secondary,
   },
   itemTotal: {
     fontSize: 15,
@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
   },
   totalLabel: {
     fontSize: 15,
-    color: '#666',
+    color: theme.colors.text.secondary,
   },
   totalValue: {
     fontSize: 15,
@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
   finalTotalValue: {
     fontSize: theme.typography.fontSize.xl,
     fontWeight: 'bold',
-    color: '#4CAF50',
+    color: theme.colors.primary.green,
   },
   actions: {
     marginVertical: theme.spacing.lg,
@@ -399,7 +399,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 14,
-    color: '#666',
+    color: theme.colors.text.secondary,
     marginBottom: 4,
   },
   footerSubtext: {

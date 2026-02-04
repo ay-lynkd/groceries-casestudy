@@ -1,4 +1,4 @@
-import { Text } from "@/components/common";
+import { ScreenHeader, Text } from "@/components/common";
 import RichTextEditor from "@/components/common/RichTextEditor";
 import { Button, Card } from "@/components/primary";
 import { theme } from "@/theme/appTheme";
@@ -133,15 +133,10 @@ const ReturnPolicyEditor: React.FC = () => {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="chevron-back" size={24} color={theme.colors.text.primary} />
-        </TouchableOpacity>
-        <Text variant="h2" fontWeight="bold" style={styles.headerTitle}>
-          Return Policy
-        </Text>
-        <View style={styles.headerActions}>
+      <ScreenHeader
+        title="Return Policy"
+        showBack={true}
+        rightElement={
           <TouchableOpacity
             onPress={handleReset}
             style={styles.resetButton}
@@ -149,8 +144,8 @@ const ReturnPolicyEditor: React.FC = () => {
           >
             <Ionicons name="refresh" size={24} color={theme.colors.text.primary} />
           </TouchableOpacity>
-        </View>
-      </View>
+        }
+      />
 
       <ScrollView
         style={styles.content}
@@ -468,26 +463,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background.primary,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border.light,
-  },
-  backButton: {
-    padding: theme.spacing.sm,
-  },
-  headerTitle: {
-    flex: 1,
-    textAlign: "center",
-  },
-  headerActions: {
-    flexDirection: "row",
-    gap: theme.spacing.md,
   },
   resetButton: {
     padding: theme.spacing.sm,

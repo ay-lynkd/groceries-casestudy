@@ -19,6 +19,9 @@ export const GlassActionButton: React.FC<GlassActionButtonProps> = ({
       onPress={onPress}
       activeOpacity={0.7}
       style={styles.wrapper}
+      accessibilityLabel={label}
+      accessibilityRole="button"
+      accessibilityHint={`${label} funds`}
     >
       <View style={styles.iconButton}>
         <Ionicons name={icon} size={22} color="white" />

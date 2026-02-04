@@ -1,10 +1,11 @@
+import { ScreenHeader } from '@/components/common';
 import { OrderTrackingPage } from '@/components/features/order/OrderTrackingPage';
 import { orderTrackingData } from '@/mocks/orderTrackingData';
 import { theme } from '@/theme/appTheme';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 export default function OrderTrackingScreen() {
   const router = useRouter();
@@ -47,15 +48,7 @@ export default function OrderTrackingScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.headerBtn}>
-          <Ionicons name="chevron-back" size={24} color={theme.colors.text.primary} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Order Tracking</Text>
-        <View style={styles.headerBtn}>
-          <Text style={styles.lastUpdatedText}>Updated: {new Date().toLocaleTimeString()}</Text>
-        </View>
-      </View>
+      <ScreenHeader title="Order Tracking" showBack={true} />
       <OrderTrackingPage trackingData={trackingData} />
     </View>
   );
@@ -70,24 +63,4 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background.secondary,
   },
   errorText: { color: theme.colors.text.secondary, fontSize: 16 },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    paddingTop: 48,
-    backgroundColor: theme.colors.background.primary,
-  },
-  headerBtn: { padding: 8, minWidth: 40 },
-  headerTitle: {
-    color: theme.colors.text.primary,
-    fontSize: 20,
-    fontWeight: '700',
-  },
-  lastUpdatedText: {
-    color: theme.colors.text.light,
-    fontSize: 12,
-    fontWeight: '400',
-  },
 });

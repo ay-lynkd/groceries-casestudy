@@ -29,6 +29,7 @@ export const SettingsMenuItem: React.FC<SettingsMenuItemProps> = ({
       activeOpacity={0.7}
       accessibilityRole="button"
       accessibilityLabel={label}
+      accessibilityHint={subtitle ? `${subtitle}. Tap to open` : `Tap to open ${label}`}
     >
       <View style={styles.content}>
         <View style={styles.iconContainer}>

@@ -6,6 +6,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, TextInput, KeyboardAvoidingView, Platform, Alert, ScrollView } from 'react-native';
 import { Text } from '@/components/common';
+
 import { Button, Card } from '@/components/primary';
 import { theme } from '@/theme/appTheme';
 import { useLocalSearchParams, Stack, router } from 'expo-router';
@@ -180,11 +181,11 @@ export default function DeliveryOTPScreen() {
             disabled={otp.some(d => !d) || isVerifying}
           >
             {isVerifying ? (
-              <Text style={{ color: '#FFF' }}>Verifying...</Text>
+              <Text style={{ color: colors.background.primary }}>Verifying...</Text>
             ) : (
               <>
-                <Ionicons name="checkmark-circle" size={20} color="#FFF" />
-                <Text style={{ color: '#FFF', marginLeft: 8 }}>Verify & Complete</Text>
+                <Ionicons name="checkmark-circle" size={20} color={colors.background.primary} />
+                <Text style={{ color: colors.background.primary, marginLeft: 8 }}>Verify & Complete</Text>
               </>
             )}
           </Button>
@@ -202,7 +203,7 @@ export default function DeliveryOTPScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: theme.colors.background.primary,
   },
   scrollView: {
     flex: 1,
@@ -225,11 +226,11 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#333',
+    color: theme.colors.text.primary,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: theme.colors.text.secondary,
     textAlign: 'center',
     marginBottom: 32,
     lineHeight: 24,
@@ -242,19 +243,19 @@ const styles = StyleSheet.create({
   },
   orderLabel: {
     fontSize: 12,
-    color: '#666',
+    color: theme.colors.text.secondary,
     textTransform: 'uppercase',
     marginBottom: 4,
   },
   orderId: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#4CAF50',
+    color: theme.colors.primary.green,
     marginBottom: 8,
   },
   customerName: {
     fontSize: 16,
-    color: '#333',
+    color: theme.colors.text.primary,
   },
   otpContainer: {
     flexDirection: 'row',
@@ -269,25 +270,25 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#333',
+    color: theme.colors.text.primary,
   },
   otpInputFilled: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: theme.colors.background.secondary,
   },
   resendContainer: {
     marginBottom: 24,
   },
   timerText: {
     fontSize: 14,
-    color: '#666',
+    color: theme.colors.text.secondary,
   },
   timerValue: {
     fontWeight: 'bold',
-    color: '#4CAF50',
+    color: theme.colors.primary.green,
   },
   helpText: {
     fontSize: 12,
-    color: '#999',
+    color: theme.colors.text.light,
     textAlign: 'center',
     marginTop: 24,
   },

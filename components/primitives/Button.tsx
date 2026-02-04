@@ -1,8 +1,16 @@
+/**
+ * Enhanced Button Component
+ * Fixed size variants, added loading state, icon support, and press animations
+ */
+
 import { theme } from '@/theme/appTheme';
+import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AccessibilityState,
+  ActivityIndicator,
+  Animated,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -12,18 +20,30 @@ import {
 
 interface ButtonProps {
   children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'outline';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   onPress?: () => void;
   active?: boolean;
   style?: ViewStyle;
   shiny?: boolean;
   disabled?: boolean;
+  loading?: boolean;
+  leftIcon?: keyof typeof Ionicons.glyphMap;
+  rightIcon?: keyof typeof Ionicons.glyphMap;
+  fullWidth?: boolean;
   accessibilityLabel?: string;
   accessibilityHint?: string;
   accessibilityRole?: 'button' | 'tab';
   accessibilityState?: AccessibilityState;
   testID?: string;
+  /**
+   * Scale value when button is pressed (default: 0.95)
+   */
+  pressScale?: number;
+  /**
+   * Disable press animation
+   */
+  disableAnimation?: boolean;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -35,14 +55,65 @@ export const Button: React.FC<ButtonProps> = ({
   style,
   shiny = false,
   disabled = false,
+  loading = false,
+  leftIcon,
+  rightIcon,
+  fullWidth = false,
   accessibilityLabel,
   accessibilityHint,
   accessibilityRole = 'button',
   accessibilityState,
   testID,
+  pressScale = 0.95,
+  disableAnimation = false,
 }) => {
+  const [scaleAnim] = useState(new Animated.Value(1));
   const isShiny = shiny && active;
   const hasShadow = shiny;
+  const isDisabled = disabled || loading;
+  const shouldAnimate = !isDisabled && !disableAnimation;
+
+  // Scale animation on press
+  const onPressIn = () => {
+    if (shouldAnimate) {
+      Animated.spring(scaleAnim, {
+        toValue: pressScale,
+        friction: 8,
+        tension: 100,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
+  const onPressOut = () => {
+    if (shouldAnimate) {
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        friction: 8,
+        tension: 100,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
+  // Size configurations matching design system
+  const sizeStyles = {
+    sm: {
+      height: 36,
+      paddingHorizontal: theme.spacing.md,
+      fontSize: theme.typography.fontSize.sm,
+    },
+    md: {
+      height: 44,
+      paddingHorizontal: theme.spacing.lg,
+      fontSize: theme.typography.fontSize.base,
+    },
+    lg: {
+      height: 56,
+      paddingHorizontal: theme.spacing.xl,
+      fontSize: theme.typography.fontSize.lg,
+    },
+  };
 
   const variantStyles: Record<string, ViewStyle> = {
     primary: {
@@ -60,12 +131,23 @@ export const Button: React.FC<ButtonProps> = ({
       borderColor: theme.colors.border.light,
       borderWidth: 1,
     },
+    ghost: {
+      backgroundColor: 'transparent',
+      borderWidth: 0,
+    },
+    danger: {
+      backgroundColor: theme.colors.status.error,
+      borderColor: theme.colors.status.error,
+      borderWidth: 1,
+    },
   };
 
   const textColor =
-    variant === 'primary' || (variant === 'secondary' && active)
-      ? '#FFFFFF'
+    variant === 'primary' || variant === 'danger' || (variant === 'secondary' && active)
+      ? theme.colors.background.primary
       : theme.colors.text.primary;
+
+  const currentSize = sizeStyles[size];
 
   const buttonContent = (
     <>
@@ -89,87 +171,136 @@ export const Button: React.FC<ButtonProps> = ({
           />
         </View>
       )}
-      <Text
-        numberOfLines={1}
-        style={[
-          styles.text,
-          {
-            fontSize:
-              size === 'sm' ? theme.typography.fontSize.sm : theme.typography.fontSize.base,
-            color: textColor,
-          },
-        ]}>
-        {children}
-      </Text>
+      
+      {loading ? (
+        <ActivityIndicator 
+          size="small" 
+          color={textColor}
+          accessibilityLabel="Loading"
+        />
+      ) : (
+        <View style={styles.content}>
+          {leftIcon && (
+            <Ionicons 
+              name={leftIcon} 
+              size={currentSize.fontSize} 
+              color={textColor}
+              style={styles.leftIcon}
+            />
+          )}
+          <Text
+            numberOfLines={1}
+            style={[
+              styles.text,
+              {
+                fontSize: currentSize.fontSize,
+                color: textColor,
+              },
+            ]}>
+            {children}
+          </Text>
+          {rightIcon && (
+            <Ionicons 
+              name={rightIcon} 
+              size={currentSize.fontSize} 
+              color={textColor}
+              style={styles.rightIcon}
+            />
+          )}
+        </View>
+      )}
     </>
   );
 
-  if (hasShadow) {
+  const buttonProps = {
+    onPress: !isDisabled ? onPress : undefined,
+    disabled: isDisabled,
+    activeOpacity: isDisabled ? 1 : 0.8,
+    accessibilityLabel: accessibilityLabel || (typeof children === 'string' ? children : 'Button'),
+    accessibilityHint: accessibilityHint || (loading ? 'Loading, please wait' : undefined),
+    accessibilityRole,
+    accessibilityState: { 
+      ...accessibilityState, 
+      disabled: isDisabled,
+      busy: loading 
+    },
+    testID,
+  };
+
+  const baseButtonStyle = [
+    styles.base,
+    {
+      height: currentSize.height,
+      paddingHorizontal: currentSize.paddingHorizontal,
+      borderRadius: theme.borderRadius.full,
+    },
+    variantStyles[variant],
+    isDisabled && styles.disabled,
+    fullWidth && styles.fullWidth,
+  ];
+
+  const renderButton = () => {
+    if (hasShadow) {
+      return (
+        <View style={[styles.shadowWrapper, fullWidth && styles.fullWidth]}>
+          <View style={[styles.shadow, !active && styles.shadowInactive]} />
+          <TouchableOpacity
+            {...buttonProps}
+            onPressIn={onPressIn}
+            onPressOut={onPressOut}
+            style={baseButtonStyle}>
+            {buttonContent}
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
     return (
-      <View style={[styles.shadowWrapper, style]}>
-        <View style={[styles.shadow, !active && styles.shadowInactive]} />
-        <TouchableOpacity
-          onPress={!disabled ? onPress : undefined}
-          disabled={disabled}
-          activeOpacity={disabled ? 1 : 0.8}
-          style={[
-            styles.base,
-            styles.shinyBase,
-            variantStyles[variant],
-            disabled && styles.disabled,
-            style,
-          ]}
-          accessibilityLabel={accessibilityLabel}
-          accessibilityHint={accessibilityHint}
-          accessibilityRole={accessibilityRole}
-          accessibilityState={{ ...accessibilityState, disabled }}
-          testID={testID}>
-          {buttonContent}
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        {...buttonProps}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
+        style={baseButtonStyle}>
+        {buttonContent}
+      </TouchableOpacity>
     );
-  }
+  };
 
   return (
-    <TouchableOpacity
-      onPress={!disabled ? onPress : undefined}
-      disabled={disabled}
-      activeOpacity={disabled ? 1 : 0.8}
+    <Animated.View
       style={[
-        styles.base,
-        styles.nonShinyBase,
-        variantStyles[variant],
-        disabled && styles.disabled,
+        { transform: [{ scale: scaleAnim }] },
+        fullWidth && styles.fullWidth,
         style,
-      ]}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityHint={accessibilityHint}
-      accessibilityRole={accessibilityRole}
-      accessibilityState={{ ...accessibilityState, disabled }}
-      testID={testID}>
-      {buttonContent}
-    </TouchableOpacity>
+      ]}>
+      {renderButton()}
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   base: {
-    borderRadius: theme.borderRadius.full,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  content: {
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  shinyBase: {
-    paddingVertical: theme.spacing.md,
-    paddingHorizontal: theme.spacing.lg,
-    overflow: 'hidden',
+  text: {
+    fontFamily: theme.fonts.figtree,
+    fontWeight: theme.typography.fontWeight.medium,
   },
-  nonShinyBase: {
-    paddingVertical: theme.spacing.md,
-    paddingHorizontal: theme.spacing.lg,
+  leftIcon: {
+    marginRight: theme.spacing.sm,
+  },
+  rightIcon: {
+    marginLeft: theme.spacing.sm,
   },
   shadowWrapper: {
     position: 'relative',
-    minHeight: 48,
   },
   shadow: {
     position: 'absolute',
@@ -188,12 +319,11 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: theme.borderRadius.full,
   },
-  text: {
-    fontFamily: theme.fonts.figtree,
-    fontWeight: theme.typography.fontWeight.medium,
-  },
   disabled: {
     opacity: 0.5,
+  },
+  fullWidth: {
+    width: '100%',
   },
 });
 

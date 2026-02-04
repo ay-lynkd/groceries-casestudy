@@ -36,7 +36,13 @@ export const EarningsChartCard: React.FC<EarningsChartCardProps> = ({
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Earning This Week</Text>
-        <TouchableOpacity onPress={onRefresh} style={styles.refreshButton}>
+        <TouchableOpacity 
+          onPress={onRefresh} 
+          style={styles.refreshButton}
+          accessibilityLabel="Refresh earnings data"
+          accessibilityRole="button"
+          accessibilityHint="Update earnings chart with latest data"
+        >
           <Ionicons
             name="sync-outline"
             size={20}
@@ -58,6 +64,10 @@ export const EarningsChartCard: React.FC<EarningsChartCardProps> = ({
               selectedPeriod === period && styles.periodButtonActive,
             ]}
             onPress={() => handlePeriodChange(period)}
+            accessibilityLabel={`View ${period.toLowerCase()} earnings`}
+            accessibilityRole="button"
+            accessibilityHint={`Show earnings for this ${period.toLowerCase()}`}
+            accessibilityState={{ selected: selectedPeriod === period }}
           >
             <Text
               style={[

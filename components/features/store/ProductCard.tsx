@@ -41,6 +41,9 @@ export const ProductCard = React.memo(({
       onPress={onPress}
       disabled={!onPress}
       style={styles.container}
+      accessibilityLabel={`${name}, ${quantity}, ₹${currentPrice}${discount > 0 ? `, ${discount}% off` : ''}${inStock ? '' : ', Out of stock'}`}
+      accessibilityRole="button"
+      accessibilityHint="Tap to view product details"
     >
       <Card style={styles.card}>
         {/* Image Container */}

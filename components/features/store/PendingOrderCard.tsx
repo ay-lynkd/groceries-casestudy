@@ -29,7 +29,13 @@ export const PendingOrderCard: React.FC<PendingOrderCardProps> = ({ order, onSch
       <View style={styles.paymentBadge}>
         <Text style={styles.paymentText}>Payment Received ₹{order.paymentAmount.toFixed(2)}</Text>
       </View>
-      <TouchableOpacity style={styles.scheduleBtn} onPress={() => onSchedule?.(order.orderId)}>
+      <TouchableOpacity 
+        style={styles.scheduleBtn} 
+        onPress={() => onSchedule?.(order.orderId)}
+        accessibilityLabel={`Schedule delivery for order ${order.orderId}`}
+        accessibilityRole="button"
+        accessibilityHint="Opens delivery scheduling page"
+      >
         <Text style={styles.scheduleBtnText}>Schedule Delivery</Text>
       </TouchableOpacity>
     </Card>
