@@ -551,7 +551,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    paddingHorizontal: theme.spacing.md,
     paddingTop: theme.spacing.xl + 28,
     paddingBottom: 16,
   },
@@ -594,16 +594,16 @@ const styles = StyleSheet.create({
   },
   stepLabelActive: {
     color: theme.colors.status.success,
-    fontWeight: '600',
+    fontWeight: theme.typography.fontWeight.semibold,
   },
   progressBarContainer: {
     height: 4,
-    backgroundColor: '#E0E0E0',
+    backgroundColor: theme.colors.border.light,
     borderRadius: theme.borderRadius.sm / 4,
   },
   progressBar: {
     height: '100%',
-    backgroundColor: '#4CAF50',
+    backgroundColor: theme.colors.primary.green,
     borderRadius: 2,
   },
   content: {
@@ -624,16 +624,16 @@ const styles = StyleSheet.create({
   },
   stepDescription: {
     fontSize: theme.typography.fontSize.sm,
-    color: '#666',
+    color: theme.colors.text.secondary,
     marginBottom: theme.spacing.md + 4,
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: theme.spacing.lg,
   },
   label: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 8,
+    fontSize: theme.typography.fontSize.base,
+    fontWeight: theme.typography.fontWeight.semibold,
+    marginBottom: theme.spacing.sm,
     color: theme.colors.text.primary,
   },
   input: {
@@ -651,38 +651,38 @@ const styles = StyleSheet.create({
   },
   hint: {
     fontSize: theme.typography.fontSize.xs,
-    color: '#666',
-    marginTop: 4,
+    color: theme.colors.text.secondary,
+    marginTop: theme.spacing.xs,
   },
   categoryGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: theme.spacing.sm,
   },
   categoryChip: {
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: theme.spacing.sm,
     borderRadius: theme.borderRadius.xl,
     backgroundColor: theme.colors.background.tertiary,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: theme.colors.border.light,
   },
   categoryChipActive: {
     backgroundColor: theme.colors.status.success + '15',
-    borderColor: '#4CAF50',
+    borderColor: theme.colors.primary.green,
   },
   categoryTextActive: {
-    color: '#4CAF50',
-    fontWeight: '600',
+    color: theme.colors.primary.green,
+    fontWeight: theme.typography.fontWeight.semibold,
   },
   profitCard: {
     padding: theme.spacing.md,
-    backgroundColor: '#E8F5E9',
+    backgroundColor: theme.colors.primary.green + '15',
   },
   profitRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: theme.spacing.sm,
   },
   profitValue: {
     fontWeight: 'bold',
@@ -692,7 +692,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: theme.spacing.lg,
   },
   toggle: {
     width: 50,
@@ -702,7 +702,7 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   toggleActive: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: theme.colors.primary.green,
   },
   toggleKnob: {
     width: 24,
@@ -731,7 +731,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 4,
     left: 4,
-    backgroundColor: '#4CAF50',
+    backgroundColor: theme.colors.primary.green,
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: theme.borderRadius.sm / 2,
@@ -760,12 +760,12 @@ const styles = StyleSheet.create({
   },
   addImageText: {
     fontSize: 12,
-    color: '#666',
+    color: theme.colors.text.secondary,
     marginTop: 4,
   },
   imageHint: {
     fontSize: 12,
-    color: '#666',
+    color: theme.colors.text.secondary,
     marginTop: theme.spacing.md,
     textAlign: 'center',
   },
@@ -801,8 +801,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   reviewCategory: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: theme.typography.fontSize.base,
+    color: theme.colors.text.secondary,
     marginTop: 2,
   },
   reviewSection: {
@@ -811,12 +811,12 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   reviewLabel: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: theme.typography.fontSize.base,
+    color: theme.colors.text.secondary,
   },
   reviewValue: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: theme.typography.fontSize.base,
+    fontWeight: theme.typography.fontWeight.semibold,
   },
   strikethrough: {
     textDecorationLine: 'line-through',
