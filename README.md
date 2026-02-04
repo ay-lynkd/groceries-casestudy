@@ -1,73 +1,236 @@
-# Welcome to your Expo app 👋
+# 🛒 Groceries Delivery App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A comprehensive React Native (Expo) application for managing a groceries delivery business. Built for sellers to manage products, orders, inventory, analytics, and more.
 
-## Get started
+![Expo](https://img.shields.io/badge/Expo-52.0.28-blue.svg)
+![React Native](https://img.shields.io/badge/React%20Native-0.76.7-61DAFB.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.3.3-3178C6.svg)
 
-1. Install dependencies
+## 📱 Features
 
-   ```bash
-   npm install
-   ```
+### Dashboard & Home
+- 📊 Real-time sales analytics and charts
+- 📈 Order statistics (new, preparing, delivered)
+- 🔔 Push notifications center
+- 🔍 Search orders and customers
+- 📱 QR code scanner for order tracking
 
-2. Start the app
+### Product Management
+- ➕ Create, edit, and delete products
+- 📁 Category and subcategory management
+- 💰 Dynamic pricing with profit calculations
+- 📸 Image upload and management
+- 📦 Inventory tracking with low stock alerts
+- 🏷️ SKU and barcode support
 
-   ```bash
-   npx expo start
-   ```
+### Order Management
+- 📋 View all orders with filtering
+- 🔄 Track order status (new → accepted → preparing → ready → assigned → out for delivery → delivered)
+- 💬 Customer communication
+- 📄 Invoice generation and sharing
+- 🔐 OTP verification for delivery
 
-   **Without Android SDK:** run on web or iOS instead:
-   - **Web:** `npx expo start --web` then press `w`, or run `npm run web`
-   - **iOS (macOS only):** `npx expo start --ios` or press `i` in the menu
+### Analytics
+- 👥 Customer behavior analysis
+- 📊 Sales reports and trends
+- 🎯 Customer segmentation
+- 📈 Product performance metrics
+- 💵 Revenue tracking
 
-In the output, you'll find options to open the app in a
+### Wallet & Finances
+- 💰 Balance tracking
+- 💳 Payout requests
+- 📜 Transaction history
+- 📑 Tax reports
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Delivery Management
+- 🚚 Delivery boy assignment
+- 📍 Route optimization
+- 📦 Delivery tracking
+- ✅ Delivery confirmation with OTP
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Store Settings
+- 🏪 Store profile management
+- ⏰ Working hours configuration
+- 🔔 Notification preferences
+- 📋 Return policies
 
-## Get a fresh project
+## 🚀 Getting Started
 
-When you're ready, run:
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+- Expo CLI (`npm install -g expo-cli`)
+- iOS Simulator (macOS only) or Android Emulator
 
+### Installation
+
+1. Clone the repository
 ```bash
-npm run reset-project
+git clone https://github.com/ay-lynkd/groceries-casestudy.git
+cd groceries-casestudy
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Install dependencies
+```bash
+npm install
+# or
+yarn install
+```
 
-## Learn more
+3. Start the development server
+```bash
+npx expo start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+4. Run on your preferred platform
+- Press `i` for iOS Simulator
+- Press `a` for Android Emulator
+- Press `w` for Web
+- Scan QR code with Expo Go app on physical device
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 📁 Project Structure
 
-## Troubleshooting
+```
+├── app/                      # Expo Router screens
+│   ├── (tabs)/              # Tab navigation screens
+│   ├── analytics/           # Analytics screens
+│   ├── auth/                # Authentication screens
+│   ├── orders/              # Order management
+│   ├── products/            # Product management
+│   ├── store/               # Store settings
+│   └── wallet/              # Wallet and finances
+├── components/
+│   ├── primitives/          # Reusable UI components (Button, Input, Card)
+│   ├── features/            # Feature-specific components
+│   ├── common/              # Shared components (Header, Loading, etc.)
+│   └── modals/              # Modal dialogs
+├── contexts/                # React Context providers
+│   ├── AuthContext.tsx
+│   ├── OrderContext.tsx
+│   ├── ProductContext.tsx
+│   └── WalletContext.tsx
+├── hooks/                   # Custom React hooks
+├── mocks/                   # Mock data for development
+├── theme/                   # Theme configuration
+├── types/                   # TypeScript type definitions
+└── utils/                   # Utility functions
+```
 
-### Android: "Failed to resolve the Android SDK path" / "spawn adb ENOENT"
+## 🛠️ Tech Stack
 
-Android SDK isn’t installed or `ANDROID_HOME` isn’t set.
+- **Framework:** React Native with Expo
+- **Navigation:** Expo Router (file-based routing)
+- **State Management:** React Context API
+- **Styling:** StyleSheet with custom theme system
+- **Icons:** Ionicons (@expo/vector-icons)
+- **Charts:** Custom chart components
+- **Storage:** AsyncStorage for local data
+- **Notifications:** Expo Notifications
 
-1. **Install Android Studio** (includes the SDK): [developer.android.com/studio](https://developer.android.com/studio)
-2. **Set `ANDROID_HOME`** in your shell config (`~/.zshrc` or `~/.bash_profile`):
+## 📱 Screenshots
 
-   ```bash
-   export ANDROID_HOME=$HOME/Library/Android/sdk
-   export PATH=$PATH:$ANDROID_HOME/emulator
-   export PATH=$PATH:$ANDROID_HOME/platform-tools
-   ```
+| Home | Products | Orders | Analytics |
+|------|----------|--------|-----------|
+| Dashboard with stats | Product listing | Order management | Sales charts |
 
-3. Restart the terminal, run `npx expo start`, then press `a` for Android.
+## 🔧 Key Features Implemented
 
-Until then, use **web** (`npm run web`) or **iOS** (`npm run ios`, macOS only).
+### 1. Folder Structure Reorganization
+- `components/primitives/` - Atomic UI components
+- `components/features/` - Feature-specific components
+- `mocks/` - Mock data separated from code
 
-## Join the community
+### 2. ScrollView & FlatList Optimization
+- Fixed ScrollView + FlatList conflicts
+- Proper keyboard handling
+- Optimized list performance
 
-Join our community of developers creating universal apps.
+### 3. Product Creation Wizard
+- Multi-step form with validation
+- TextInput fields for all product data
+- Category selection
+- Image upload simulation
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### 4. Order Tracking
+- Real-time status updates
+- Timeline visualization
+- OTP verification for delivery
+
+## 📝 Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+# API Configuration
+API_URL=https://your-api-url.com
+
+# Firebase (if using)
+FIREBASE_API_KEY=your_key
+FIREBASE_PROJECT_ID=your_project
+
+# Other services
+STRIPE_PUBLIC_KEY=your_key
+```
+
+## 🧪 Testing
+
+```bash
+# Run tests
+npm test
+
+# Run with coverage
+npm test -- --coverage
+```
+
+## 📦 Building for Production
+
+### Android
+```bash
+cd android
+./gradlew assembleRelease
+```
+
+### iOS
+```bash
+cd ios
+xcodebuild -workspace GroceriesDeliveryApp.xcworkspace -scheme GroceriesDeliveryApp -configuration Release
+```
+
+### Expo EAS Build
+```bash
+# Configure EAS
+npx eas-cli@latest configure
+
+# Build for Android
+npx eas build --platform android
+
+# Build for iOS
+npx eas build --platform ios
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🙏 Acknowledgments
+
+- [Expo](https://expo.dev) for the amazing React Native framework
+- [React Native](https://reactnative.dev) community
+- [Ionicons](https://ionicons.com) for beautiful icons
+
+## 📞 Support
+
+For support, email support@example.com or join our Slack channel.
+
+---
+
+Built with ❤️ using React Native and Expo
